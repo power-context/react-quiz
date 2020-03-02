@@ -45,17 +45,17 @@ export default class QuizCreator extends Component {
     const quiz = this.state.quiz.concat()
     const index = quiz.length + 1
 
-    const {question, option1, option2, option3, option4} = this.state.formControls
+    const {question, answer1, answer2, answer3, answer4} = this.state.formControls
 
     const questionItem = {
       question: question.value,
       id: index,
       rightAnswerId: this.state.rightAnswerId,
       answers: [
-        {text: option1.value, id: option1.id},
-        {text: option2.value, id: option2.id},
-        {text: option3.value, id: option3.id},
-        {text: option4.value, id: option4.id}
+        {text: answer1.value, id: answer1.id},
+        {text: answer2.value, id: answer2.id},
+        {text: answer3.value, id: answer3.id},
+        {text: answer4.value, id: answer4.id}
       ]
     }
     quiz.push(questionItem)
@@ -68,8 +68,9 @@ export default class QuizCreator extends Component {
     })
   }
 
-  finishButtonHandler = () => {
-
+  createTestButtonHandler = event => {
+    event.preventDefault()
+    //TODO server
   }
 
   changeHandler(value, name){
@@ -146,7 +147,7 @@ export default class QuizCreator extends Component {
               onClick={this.finishButtonHandler}
               disabled={this.state.quiz.length === 0}
             >
-              Finish test
+              Create test
             </Button>
           </form>
         </div>
