@@ -15,10 +15,13 @@ export default class QuizList extends Component {
     });
   }
 
-  componentDidMount(){
-    axios.get('https://react-quiz-62ba2.firebaseio.com/quizes.json').then(res => {
-      console.log(res)
-    })
+  async componentDidMount(){
+    try {
+      const responce = await axios.get('https://react-quiz-62ba2.firebaseio.com/quizes.json')
+      console.log(responce.data)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   render() {
