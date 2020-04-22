@@ -1,7 +1,10 @@
 import React, { Component } from "react";
+
 import classes from "./quiz.module.css";
 import ActiveQuiz from "../../components/activeQuiz/ActiveQuiz";
 import FinishedQuiz from "../../components/finishedQuiz/finishedQuiz";
+import axios from "../../axios/Axios-conf";
+import Loader from "../../components/UI/Loader/Loader";
 
 class Quiz extends Component {
   state = {
@@ -9,41 +12,8 @@ class Quiz extends Component {
     isFinished: false,
     activeQuestion: 0,
     answerState: null,
-    quiz: [
-      {
-        question: "What's your likest color?",
-        rightAnswerId: 2,
-        id: 1,
-        answers: [
-          { text: "Red", id: 1 },
-          { text: "Green", id: 2 },
-          { text: "Blue", id: 3 },
-          { text: "I don't like colors", id: 4 }
-        ]
-      },
-      {
-        question: "What's your likest music?",
-        rightAnswerId: 2,
-        id: 2,
-        answers: [
-          { text: "Rock", id: 1 },
-          { text: "Metall", id: 2 },
-          { text: "Rap", id: 3 },
-          { text: "I don't know", id: 4 }
-        ]
-      },
-      {
-        question: "What's your likest car's model?",
-        rightAnswerId: 1,
-        id: 3,
-        answers: [
-          { text: "BMW X5", id: 1 },
-          { text: "Lamborgini Mercurilago", id: 2 },
-          { text: "Audi A3", id: 3 },
-          { text: "I don't like cars", id: 4 }
-        ]
-      }
-    ]
+    quiz: [],
+    loading: true
   };
 
   onAnswerClickHandler = answerId => {
@@ -106,7 +76,18 @@ class Quiz extends Component {
     });
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const quizID = this.props.match.params.id;
+    try {
+      const responce = await axios.get(`/quizes/${quizID}.json`);
+      const quiz = responce.data;
+      this.setState({
+        quiz,
+        loading: false
+      });
+    } catch (e) {
+      console.log(e);
+    }
     console.log("This ID " + this.props.match.params.id);
   }
 
@@ -115,7 +96,9 @@ class Quiz extends Component {
       <div className={classes.Quiz}>
         <div className={classes.QuizWrapper}>
           <h1>Quiz React</h1>
-          {this.state.isFinished ? (
+          {this.state.loading ? (
+            <Loader />
+          ) : this.state.isFinished ? (
             <FinishedQuiz
               results={this.state.results}
               quiz={this.state.quiz}
