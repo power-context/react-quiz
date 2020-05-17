@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import {createStore, compose, applyMiddleWare} from 'redux'
+import {createStore, compose, applyMiddleware } from 'redux'
 import {Provider} from 'react-redux'
 import rootReducer from './store/reducers/rootReducer'
 import thunk from 'redux-thunk'
@@ -17,7 +17,7 @@ const composeEnhancers = typeof window === 'object' &&
 
 
 const store = createStore(rootReducer,
-  composeEnhancers(applyMiddleWare(thunk))
+  composeEnhancers(applyMiddleware(thunk))
   )
 
 const app = (
