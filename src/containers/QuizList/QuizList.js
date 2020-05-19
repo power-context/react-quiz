@@ -19,7 +19,6 @@ class QuizList extends Component {
 
 componentDidMount() {
     this.props.fetchQuizes()
-
   }
 
   render() {
