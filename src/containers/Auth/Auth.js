@@ -4,9 +4,11 @@ import classes from './Auth.module.css'
 import Button from '../../components/UI/Button/Button'
 import Input from '../../components/UI/Input/Input'
 import is from 'is_js'
-import axios from 'axios'
 
-export default class Auth extends Component {
+import { connect } from "react-redux"
+import auth from '../../store/actions/authActionCreator'
+
+class Auth extends Component {
 
   state = {
     isFormValid: false,
@@ -38,32 +40,18 @@ export default class Auth extends Component {
     }
   }
 
-  singInHandler = async () => {
-    const authData = {
-      email: this.state.formControls.email.value,
-      password: this.state.formControls.password.value,
-      returnSecureToken: true
-    }
-    try {
-      const responce = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCxKu0C6JpPx8tDFf_YDieuEfMwChf3r80', authData)
-      console.log(responce.data)
-    } catch(e){
-      console.log(e)
-    }
+  singInHandler = () => {
+    this.props.auth(
+      this.state.formControls.email.value, 
+      this.state.formControls.password.value, 
+      true)
   }
 
-  singUpHandler = async () => {
-    const authData = {
-      email: this.state.formControls.email.value,
-      password: this.state.formControls.password.value,
-      returnSecureToken: true
-    }
-    try {
-      const responce = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCxKu0C6JpPx8tDFf_YDieuEfMwChf3r80', authData)
-      console.log(responce.data)
-    } catch(e){
-      console.log(e)
-    }
+  singUpHandler = () => {
+    this.props.auth(
+      this.state.formControls.email.value, 
+      this.state.formControls.password.value, 
+      false)
   }
 
   submitHandler = event => {
@@ -165,3 +153,11 @@ export default class Auth extends Component {
     );
   }
 }
+
+function mapDispatchToProps(dispatch){
+  return{
+    auth: (email, password, isLogin) => dispatch(auth(email, password, isLogin))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Auth)
