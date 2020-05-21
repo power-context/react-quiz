@@ -28,10 +28,6 @@ export default function auth(email, password, isLogin){
 
         addDataToLocaleStorage(idToken, userId, expirationDate)
 
-        console.log(idToken)
-        console.log(signTime)
-        console.log(userId)
-
         dispatch(authSuccess(idToken))
         dispatch(autoLogout(expiresIn))
     })
@@ -43,7 +39,6 @@ export default function auth(email, password, isLogin){
         localStorage.setItem('UserID', userId)
         localStorage.setItem('Expiration date', expirationDate)
     }
-    
 }
 
 export function authSuccess(token){
@@ -67,5 +62,23 @@ export function autoLogout(timer){
         setTimeout(() => {
             dispatch(logout())
         }, timer * 1000)
+    }
+}
+
+export function autoLogin(){
+    return dispatch => {
+        const token = localStorage.getItem('Token')
+        if(!token){
+            dispatch(logout())
+        } else {
+            const expirationDate = localStorage.getItem('Expiration date')
+            const currentDate = new Date().getTime()
+            if(expirationDate <= currentDate){
+                dispatch(logout())
+            } else {
+                dispatch(authSuccess(token))
+                return dispatch => dispatch(autoLogout(expirationDate - currentDate) / 1000) 
+            }
+        }
     }
 }
